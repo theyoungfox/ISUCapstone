@@ -84,7 +84,6 @@ for parentUrl in parenturl:
                 rows = filter(None,rows)
                 rowlength = len(max(rows, key=len))+1
                 headers = headers[0:rowlength]
-                #with open (str(siteID)+'.csv', 'wb') as f:
                 with open (str(siteID)+'.csv', 'wb') as f:
                     writer = csv.writer(f)
                     writer.writerow(headers)
@@ -102,7 +101,6 @@ for parentUrl in parenturl:
                     # output dict needs a list for new column ordering
                     writer = csv.DictWriter(outfile, fieldnames=reorderedHeaders)
                     # reorder the header first
-                    #writer.writeheader()
                     for row in csv.DictReader(infile):
                         # writes the reordered rows to the new file
                         writer.writerow(row)
@@ -122,6 +120,7 @@ for parentUrl in parenturl:
                 weatherData = [item for sublist in weatherData for item in sublist]
                 weatherData = [siteID.encode('utf8')] +weatherData + title
 
+                ###writing weather data
                 with open('Titles.csv', 'ab') as w:
                     writer = csv.writer(w)
                     writer.writerow(weatherData)
@@ -263,7 +262,9 @@ print 'done'
 
 f = open('splitdata.csv', 'r')
 data = f.read()
-       
+
+
+###This is where the data gets tabularized and uses tablib
 dictionaries = []
 headers = ('100m','200m','300m','400m','500m','600m','700m','800m','1000m','1100m','1200m','1400m','1500m','1600m','1800m','2000m','2400m','2200m','2800m','2600m','3000m','3200m','3400m','3600m','3800m','4000m','4200m','4400m','4600m','4800m','5000m','5200m','5600m','6000m','6400m','6800m','7200m','7600m','8000m','8400m','8800m','9200m','9600m','10000m','0.5','1.0','1.5','2.0','2.5','3.0','3.5','4.0','4.5','5.0','5.5','6.0','6.5','7.0','7.5','8.0','DQ','DNF')
 headers = set(headers)
@@ -275,9 +276,7 @@ for row in data.split('\n'):
         if column:
             row_dict[column] = value
     dictionaries.append(row_dict)
-    #headers.update(row_dict.keys())
 
-#headers = sorted(headers, key=lambda x: int(x[:-1]))
 dataset = tablib.Dataset(headers=headers)
 for row_dict in dictionaries:
     dataset.append([row_dict.get(header) for header in headers])
